@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "789576819252",
+    "project_id": "yeni-kayan-ekran",
+    "storage_bucket": "yeni-kayan-ekran.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:789576819252:android:5e6b7ab3e6540b6face061",
+        "android_client_info": {
+          "package_name": "com.example.yeni_kayan_ekran"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "789576819252-cf49dstvdho8kiljoe953qih9bpphfv2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQECfhGUgce_Msr-y-1WSmjhQxMM0t75g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "789576819252-084jsniv5cv6l02cg3slr9jiaa2207dk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "789576819252-mv7i3r6l8d23m23uo31hua96s8kr68nr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.yeniKayanEkran"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

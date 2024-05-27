@@ -1,0 +1,236 @@
+KİM NEREYE BAĞLI:
+on_boarding_screen ->başla butonu ->LoginOrRegisterPage()
+
+LoginOrRegisterPage() eğer kayıt varsa ->LoginPage()
+                                 yoksa ->RegisterPage()
+
+LoginPage() ->Giriş Yap butonu ->ConferanceOrTranslatePage()
+
+ConferanceOrTranslatePage() -> İşaret Dili Çevirme butonu ->SignTranslatePage()
+                            -> Ses Çevirme Butonu ->VoiceTranslatePage()
+                            -> Görüntülü arama yapma butonu ->VideoCallPersonOptionsPage()
+
+VideoCallPersonOptionsPage() ->İşaret dili biliyorum butonu ->KnowPersonIJPage()
+                             ->İşaret dili bilmiyorum butonu ->DKnowPersonIJPage()
+
+KnowPersonIJPage() -> ID oluştur butonu ->KnowPersonIDCreatePage()
+                   -> Katıl butonu      ->KnowPersonJoinPage()
+
+DKnowPersonIJPage() -> ID oluştur butonu ->DKnowPersonIDCreatePage()
+                   -> Katıl butonu      ->DKnowPersonJoinPage()
+
+
+GÖREVLER:
+
+AuthPage -> if değişecek.
+
+on_boarding_screen başla butonu -> "VideoCallPersonOptionsPage()" a yönlendirecek.
+
+VideoCallPersonOptionsPage() ->İşaret dili biliyorum butonu -> KnowLoginOrRegisterPage() 'e bağlanacak.
+                             ->İşaret dili bilmiyorum butonu ->DKnowLoginOrRegisterPage() 'e bağlanacak şimdilik.
+
+LoginOrRegisterPage() ->Giriş Yap butonu ->ConferanceOrVoiceTranslatePage() //yapılacak.
+                            
+
+ Color.fromARGB(255, 248, 211, 156),
+             Color.fromARGB(255, 248, 211, 156),
+
+//////////////////////////////////////
+
+
+import 'package:flutter/material.dart';
+import 'package:yeni_kayan_ekran/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:yeni_kayan_ekran/splash_screen.dart';
+
+//Navigation bar sorunu çözülecek
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SplashScreen(),
+      
+    );
+  }
+}
+
+///
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:yeni_kayan_ekran/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:yeni_kayan_ekran/person_sign_up_pages/pages/auth_page.dart';
+import 'package:yeni_kayan_ekran/person_sign_up_pages/pages/home_page.dart';
+import 'package:yeni_kayan_ekran/splash_screen.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: InitializerWidget(),
+    );
+  }
+}
+
+class InitializerWidget extends StatefulWidget {
+  const InitializerWidget({Key? key}) : super(key: key);
+
+  @override
+  _InitializerWidgetState createState() => _InitializerWidgetState();
+}
+
+class _InitializerWidgetState extends State<InitializerWidget> {
+  bool _isAuthenticated = false;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    // Simulate a splash screen duration
+    await Future.delayed(const Duration(seconds: 2));
+
+    // Check user authentication status here
+    // For example, you can use Firebase Auth
+    User? user = FirebaseAuth.instance.currentUser;
+    setState(() {
+      _isAuthenticated = user != null;
+      _isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const SplashScreen();
+    } else {
+      return _isAuthenticated ? HomePage() : const AuthPage();
+    }
+  }
+}
+
+class SplScreen extends StatelessWidget {
+  const SplScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: SplashScreen(),
+      ),
+    );
+  }
+}
+
+class AuPage extends StatelessWidget {
+  const AuPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: AuthPage(),
+      ),
+    );
+  }
+}
+
+class HoPage extends StatelessWidget {
+  const HoPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: HomePage(),
+      ),
+    );
+  }
+}
+
+//
+await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+
+
+ ////////////////////////////////////////////////
+  ListView(
+        children: [
+          SizedBox(height: 80),
+          Icon(
+            Icons.person,
+            size: 72,
+            color: Colors.grey.shade900,
+          ),
+          Text(
+            currentUser.email!,
+            textAlign: TextAlign.center,
+            style:
+                TextStyle(fontFamily: "Poppins", fontWeight: FontWeight.w700),
+          ),
+          SizedBox(height: 30),
+          Padding(
+            padding: const EdgeInsets.only(left: 25.0),
+            child: Text(
+              'Hakkımda',
+              style: TextStyle(
+                  color: Colors.grey[600],
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.w300),
+            ),
+          ),
+          MyTextBox(
+            text: 'test',
+            sectionName: 'Kullanıcı Adı',
+            onPressed: () => editField('Kullanıcı Adı'),
+          ),
+          MyTextBox(
+            text: 'Merhaba ben İşaretçi kullanıyorum !',
+            sectionName: 'Biyografi',
+            onPressed: () => editField('Biyografi'),
+          ),
+          SizedBox(height: 30),
+          IconButton(
+            onPressed: () {
+              SystemNavigator.pop();
+            },
+            icon: Icon(
+              Icons.logout_rounded,
+              color: Colors.grey.shade900,
+              size: 72,
+            ),
+          ),
+          Text(
+            'Çıkış Yap',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontFamily: "Poppins",
+                fontWeight: FontWeight.w300,
+                fontSize: 15),
+          )
+        ],
+      ),       

@@ -1,0 +1,89 @@
+1.
+İşaret dili biliyorum sayfasına youtube daki main dosyasını entegre et 
+Drawer koymana gerek yok 
+
+2.
+İşaret dili biliyorum sayfasına da youtube daki main i entegre et 
+
+3.import 'package:flutter/material.dart';
+import 'package:yeni_kayan_ekran/isaretci_3/Models/call_model.dart';
+import 'package:yeni_kayan_ekran/isaretci_3/Models/user_model.dart';
+import 'package:yeni_kayan_ekran/isaretci_3/Home/custom_avatar_builder.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_prebuilt_call/src/minimizing/mini_overlay_machine.dart';
+
+class CallPage extends StatelessWidget {
+  final String callID;
+  final bool isCaller;
+
+  CallPage({Key? key, required this.callID, required this.isCaller})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    ZegoUIKitPrebuiltCallConfig config =
+        ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
+          ..topMenuBarConfig.isVisible = true
+          ..topMenuBarConfig.buttons = isCaller
+              ? [
+                  ZegoMenuBarButtonName.minimizingButton,
+                  ZegoMenuBarButtonName.showMemberListButton,
+                  ZegoMenuBarButtonName.switchCameraButton,
+                ]
+              : [
+                  ZegoMenuBarButtonName.minimizingButton,
+                  ZegoMenuBarButtonName.switchCameraButton,
+                ]
+          ..avatarBuilder = customAvatarBuilder
+          ..onOnlySelfInRoom = (context) {
+            if (PrebuiltCallMiniOverlayPageState.idle !=
+                ZegoUIKitPrebuiltCallMiniOverlayMachine().state()) {
+              ZegoUIKitPrebuiltCallMiniOverlayMachine()
+                  .changeState(PrebuiltCallMiniOverlayPageState.idle);
+            } else {
+              Navigator.of(context).pop();
+            }
+          };
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          ZegoUIKitPrebuiltCall(
+            controller: ZegoUIKitPrebuiltCallController(),
+            appID: CallModel.appId,
+            appSign: CallModel.appSign,
+            userID: currentUser.id,
+            userName: currentUser.name,
+            callID: callID,
+            config: config,
+          ),
+          Positioned(
+            bottom: 20,
+            left: 20,
+            right: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Buton işlevi
+                  },
+                  style: ElevatedButton.styleFrom(
+                      primary: isCaller ? Colors.red : Colors.blue),
+                  child: Text(isCaller ? 'End Call' : 'Answer'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Buton işlevi
+                  },
+                  style: ElevatedButton.styleFrom(primary: Colors.green),
+                  child: Text('Custom Button'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

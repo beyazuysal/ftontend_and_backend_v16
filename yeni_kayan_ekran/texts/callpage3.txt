@@ -1,0 +1,79 @@
+import 'package:flutter/material.dart';
+import 'package:yeni_kayan_ekran/isaretci_3/Models/call_model.dart';
+import 'package:yeni_kayan_ekran/isaretci_3/Models/user_model.dart';
+import 'package:yeni_kayan_ekran/isaretci_3/Home/custom_avatar_builder.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_prebuilt_call/src/minimizing/mini_overlay_machine.dart';
+
+class CallPage extends StatelessWidget {
+  final String callID;
+  final bool isCaller;
+
+  CallPage({Key? key, required this.callID, required this.isCaller})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    ZegoUIKitPrebuiltCallConfig config =
+        ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
+          ..topMenuBarConfig.isVisible = true
+          ..topMenuBarConfig.buttons = isCaller
+              ? [
+                  ZegoMenuBarButtonName.minimizingButton,
+                  ZegoMenuBarButtonName.showMemberListButton,
+                  ZegoMenuBarButtonName.switchCameraButton,
+                ]
+              : [
+                  ZegoMenuBarButtonName.minimizingButton,
+                  ZegoMenuBarButtonName.switchCameraButton,
+                ]
+          ..avatarBuilder = customAvatarBuilder
+          ..onOnlySelfInRoom = (context) {
+            if (PrebuiltCallMiniOverlayPageState.idle !=
+                ZegoUIKitPrebuiltCallMiniOverlayMachine().state()) {
+              ZegoUIKitPrebuiltCallMiniOverlayMachine()
+                  .changeState(PrebuiltCallMiniOverlayPageState.idle);
+            } else {
+              Navigator.of(context).pop();
+            }
+          };
+
+    return Scaffold(
+      backgroundColor: Colors.white, // Arka plan rengini beyaz yapar
+      body: Stack(
+        children: [
+          ZegoUIKitPrebuiltCall(
+            controller: ZegoUIKitPrebuiltCallController(),
+            appID: CallModel.appId,
+            appSign: CallModel.appSign,
+            userID: currentUser.id,
+            userName: currentUser.name,
+            callID: callID,
+            config: config,
+          ),
+          /* Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 90.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Mesajınızı buraya yazın',
+                  filled: true,
+                  fillColor: Color.fromARGB(17, 255, 255, 255),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100.0),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                onSubmitted: (String value) {
+                  // Burada kullanıcının gönderdiği mesajı işleyebilirsiniz
+                  print('Girilen mesaj: $value');
+                },
+              ),
+            ),
+          ),*/
+        ],
+      ),
+    );
+  }
+}
